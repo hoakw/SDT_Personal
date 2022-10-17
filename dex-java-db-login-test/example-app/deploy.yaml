@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dex-example
+  namespace: dex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: dex-example
+  template:
+    metadata:
+      labels:
+        name: dex-example
+    spec:
+      hostAliases:
+      - ip: "192.168.1.207"
+        hostnames:
+        - "dex.dex.svc"
+      containers:
+      - name: dex-example
+        image: hoakw/dex-example:test
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5555
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex-example
+  namespace: dex
+  labels:
+    name: dex-example
+spec:
+  type: NodePort
+  ports:
+  - port: 5555
+    targetPort: 5555
+    name: http
+    nodePort: 30011
+  selector:
+    name: dex-example

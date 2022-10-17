@@ -1,0 +1,9 @@
+streamlit
+streamlit_tags
+pandas
+numpy
+beautifulsoup4
+sqlalchemy
+sqlalchemy_utils
+pymysql
+streamlit-aggrid

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-test
+  namespace: sdt
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      name: fastapi-test
+  template:
+    metadata:
+      labels:
+        name: fastapi-test
+    spec:
+      serviceAccountName: fastapi-test
+      containers:
+        - name: fastapi-test
+          image: hoakw/fastapi:test
+          imagePullPolicy: Always

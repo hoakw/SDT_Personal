@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: streamlit-ingress
+  namespace: web
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /gene
+        pathType: Prefix
+        backend:
+          service:
+            name: streamlit-server
+            port:
+              number: 80
+      - path: /muta
+        pathType: Prefix
+        backend:
+          service:
+            name: streamlit-muta-server
+            port:
+              number: 80
+

@@ -1,0 +1,7 @@
+host: "192.168.100.189"
+port: 3306
+username: "iguana"
+password: "mlmobiis!"
+charset: "utf-8"
+database:
+  name: "MTV"

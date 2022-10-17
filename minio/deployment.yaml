@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      volumes:
+      - name: storage
+        hostPath:
+          path: /data/minio
+      containers:
+      - name: minio
+        image: minio/minio:latest
+        args:
+        - server
+        - --console-address
+        - ":9001"
+        - "/storage"
+        env:
+        - name: MINIO_ACCESS_KEY
+          value: "sdt"
+        - name: MINIO_SECRET_KEY
+          value: "sdt251327"
+        - name: TZ
+          value: Asia/Seoul
+        - name: LANG
+          value: ko_KR.utf8
+        ports:
+        - containerPort: 9000
+          hostPort: 9000
+        - containerPort: 9001
+          hostPort: 9001
+        volumeMounts:
+        - name: storage
+          mountPath: "/storage"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: minio
+  labels:
+    run: minio
+spec:
+  type: NodePort
+  ports:
+  - port: 9000
+    targetPort: 9000
+    nodePort: 30333
+    name: api
+  - port: 9001
+    targetPort: 9001
+    nodePort: 30334
+    name: ui
+  selector:
+    app: minio

@@ -1,0 +1,23 @@
+# external requirements
+click
+coverage
+flake8
+black==22.3.0
+isort
+pre-commit
+omegaconf
+
+# Service
+streamlit
+streamlit_tags
+streamlit-aggrid
+plotly
+scipy
+streamlit_option_menu
+
+# Data
+pandas
+numpy
+sqlalchemy
+sqlalchemy_utils
+pymysql

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamlit-muta-server
+  namespace: web
+spec:
+  selector:
+    matchLabels:
+      name: streamlit-muta-server
+  template:
+    metadata:
+      labels:
+        name: streamlit-muta-server
+    spec:
+      containers:
+      - image: hoakw/steamlit-test:test
+        command:
+          - streamlit
+          - run
+          - /app/muta.py
+          - --server.baseUrlPath 
+          - muta
+          - --server.enableCORS
+          - "false"
+          - --server.enableWebsocketCompression
+          - "false"
+        imagePullPolicy: Always
+        name: streamlit-muta-server
+        ports:
+        - containerPort: 8501

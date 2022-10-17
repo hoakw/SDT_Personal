@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: status-controller
+  namespace: sdt
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      name: status-controller
+  template:
+    metadata:
+      labels:
+        name: status-controller
+    spec:
+      serviceAccountName: status-controller
+      containers:
+        - name: status-controller
+          image: hoakw/status_test:v1.0
+          command:
+          - /usr/local/bin/status_controller
+          imagePullPolicy: Always

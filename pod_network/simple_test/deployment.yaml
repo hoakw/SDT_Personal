@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-net
+  namespace : sdt
+  labels:
+    app: pod-net
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-net
+  template:
+    metadata:
+      labels:
+        app: pod-net
+    spec:
+      containers:
+        - name: pod-net
+          image: hoakw/pod_network:test
+          ports:
+            - containerPort: 5432

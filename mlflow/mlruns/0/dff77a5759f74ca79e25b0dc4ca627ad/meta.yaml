@@ -1,0 +1,15 @@
+artifact_uri: file:///home/june/Workspace/mlflow/mlruns/0/dff77a5759f74ca79e25b0dc4ca627ad/artifacts
+end_time: 1662530335146
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: dff77a5759f74ca79e25b0dc4ca627ad
+run_uuid: dff77a5759f74ca79e25b0dc4ca627ad
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1662530329122
+status: 3
+tags: []
+user_id: june
