@@ -17,10 +17,11 @@ service_kind = "Service"
 
 ## Object Variables
 #name = "nginx-deployment"
-name = "fastapi-pod-crud"
-namespace = "fastapi-system"
-labels = {"name": "nginx"}
-image = "nginx"
+name = "test-pvc"
+namespace = "sdt"
+labels = {"name": "test-pvc"}
+image = "jupyter/datascience-notebook:latest"
+notebook_home = "/home"
 
 ## Network Variables
 port = 80
@@ -29,6 +30,11 @@ node_port = 31241
 protocol = "TCP"
 network_type = "http"
 service_type = "NodePort"
+
+#volume spec
+vol_name = "workspace1"
+vol_path = "/home/pvc-test"
+pvc_name = "workspace1"
 
 ## Resource Variables
 cpu = 250
@@ -47,25 +53,26 @@ deployment = client.V1Deployment(
     api_version = "apps/v1",
     kind = "Deployment",
     metadata = client.V1ObjectMeta(
-        name="nginx-deployment",
-        namespace="default", 
-        labels= {"app": "nginx"}
+        name=name,
+        namespace=namespace, 
+        labels= labels
     ),
     spec = client.V1DeploymentSpec(
-        replicas = 3,
-        selector = client.V1LabelSelector(match_labels = {"app": "nginx"}),
+        replicas = 1,
+        selector = client.V1LabelSelector(match_labels = labels),
         template = client.V1PodTemplateSpec(
-            metadata = client.V1ObjectMeta(labels = {"app": "nginx"}),
+            metadata = client.V1ObjectMeta(labels = labels),
             spec = client.V1PodSpec(
                 containers = [ 
                     client.V1Container(
-                        name="nginx",
-                        image="nginx",
-                        ports = [client.V1ContainerPort(container_port = 80)],
+                        name=name,
+                        image=image,
+                        ports = [client.V1ContainerPort(container_port = 8888)],
+                        command = ["/bin/bash", "-c", f"jupyter lab --notebook-dir={notebook_home} --LabApp.token='' --LabApp.ip='0.0.0.0' --LabApp.allow_root=True --LabApp.allow_root=True"],
                         resources = client.V1ResourceRequirements(requests = {
                             "cpu": "250m", 
                             "memory": "500Mi"
-                        }),
+                        })
                     ),
                 ],
             ),
@@ -78,24 +85,26 @@ service = client.V1Service(
     api_version = "v1",
     kind = "Service",
     metadata = client.V1ObjectMeta(
-        name = "nginx-service", 
-        namespace = "default", 
+        name = name, 
+        namespace = namespace, 
     ),
     spec = client.V1ServiceSpec(
         ports = [client.V1ServicePort(
-            port = 8080, 
-            target_port = 80, 
+            port = port, 
+            target_port = target_port, 
             protocol = "TCP", 
-            name = "nginx-service",
+            name = name,
         )],
-        selector = {"app": "nginx"},    
+        type="NodePort",
+        selector = labels,    
     ),
 )
 
 ### Creating Deployment
-#deploy_respones = k8s_app.create_namespaced_deployment(namespace = "default", body = deployment)
+deploy_respones = k8s_app.create_namespaced_deployment(namespace = namespace, body = deployment)
+#print(deploy_respones.metadata.creation_timestamp)
 ### Creating Service
-#service_respones = k8s_core.create_namespaced_service(namespace = "default", body = service) 
+service_respones = k8s_core.create_namespaced_service(namespace = namespace, body = service) 
 
 # ### Get Deploy Info
 # ## To DO
@@ -130,13 +139,14 @@ service = client.V1Service(
 
 
 # ### Delete Deployment
-#deploy_delete = k8s_app.delete_namespaced_deployment(name = name, namespace = namespace)
-# print(f"Delete Deployment : {deploy_delete.status}")
+deploy_delete = k8s_app.delete_namespaced_deployment(name = name, namespace = namespace)
 # ### Delete Service
-#svc_delete = k8s_core.delete_namespaced_service(name = "nginx-service", namespace = namespace)
-# print(f"Delete Service : {svc_delete}")
+svc_delete = k8s_core.delete_namespaced_service(name = name, namespace = namespace)
+print(f"Delete Deployment : {svc_delete.status}")
+#print(f"Delete Service : {svc_delete}")
 
 
-# pod_list = k8s_core.list_namespaced_pod(namespace = "default")
+# pod_list = k8s_core.list_namespaced_pod(namespace = "sdt")
 # for pod_info in pod_list.items:
-#     print(f"Pod Name : {pod_info.metadata.name}")
+#     if pod_info.spec.volumes[0].persistent_volume_claim is not None:
+#         print(f"Pod Name : {pod_info.spec.volumes[0].persistent_volume_claim.claim_name}")

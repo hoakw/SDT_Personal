@@ -71,39 +71,41 @@ virtual_svc_body = {
 
 
 
-# gw_res = crd_api.create_namespaced_custom_object(
-#     group="networking.istio.io",
-#     version="v1alpha3",
-#     plural="gateways",
-#     namespace="jlab",
-#     body=gateway_body
-# )
+gw_res = crd_api.create_namespaced_custom_object(
+    group="networking.istio.io",
+    version="v1alpha3",
+    plural="gateways",
+    namespace="jlab",
+    body=gateway_body
+)
 
-# vs_res = crd_api.create_namespaced_custom_object(
-#     group="networking.istio.io",
-#     version="v1alpha3",
-#     plural="virtualservices",
-#     namespace="jlab",
-#     body=virtual_svc_body
-# )
+vs_res = crd_api.create_namespaced_custom_object(
+    group="networking.istio.io",
+    version="v1alpha3",
+    plural="virtualservices",
+    namespace="jlab",
+    body=virtual_svc_body
+)
 
 #res = crd_api.list_cluster_custom_object(group="networking.istio.io", version="v1alpha3", plural="gateways")
-res = crd_api.list_namespaced_custom_object(group="networking.istio.io", version="v1alpha3", plural="gateways", namespace="sdt")
-for gw_info in res['items']:
-    print(gw_info['metadata']['name'])
+# res = crd_api.list_namespaced_custom_object(group="networking.istio.io", version="v1alpha3", plural="gateways", namespace="sdt")
+# for gw_info in res['items']:
+#     print(gw_info['metadata']['name'])
 
-# crd_api.delete_namespaced_custom_object(
-#     group="networking.istio.io",
-#     version="v1alpha3",
-#     plural="gateways",
-#     namespace="jlab",
-#     name="jupyterlab-jlab"
-# )
+crd_res = crd_api.delete_namespaced_custom_object(
+    group="networking.istio.io",
+    version="v1alpha3",
+    plural="gateways",
+    namespace="jlab",
+    name="jupyterlab-jlab"
+)
 
-# crd_api.delete_namespaced_custom_object(
-#     group="networking.istio.io",
-#     version="v1alpha3",
-#     plural="virtualservices",
-#     namespace="jlab",
-#     name="jupyterlab-jlab"
-# )
+crd_api.delete_namespaced_custom_object(
+    group="networking.istio.io",
+    version="v1alpha3",
+    plural="virtualservices",
+    namespace="jlab",
+    name="jupyterlab-jlab"
+)
+
+print(crd_res['status'])
