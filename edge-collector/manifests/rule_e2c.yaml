@@ -1,0 +1,11 @@
+apiVersion: rules.kubeedge.io/v1
+kind: Rule
+metadata:
+  name: my-rule-e2c
+  labels:
+    description: test
+spec:
+  source: "my-eventbus"
+  sourceResource: {"topic":"test", "node_name": "sdt"}
+  target: "my-rest"
+  targetResource: {"resource":"http://192.168.1.20:8080/test"}
